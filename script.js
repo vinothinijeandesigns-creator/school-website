@@ -72,15 +72,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            // Get form values
+            const name = contactForm.querySelector('input[type="text"]').value;
+            const email = contactForm.querySelector('input[type="email"]').value;
+            const message = contactForm.querySelector('textarea').value;
+            
             const btn = contactForm.querySelector('button');
             const originalText = btn.innerHTML;
             
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening Email...';
             btn.disabled = true;
 
-            // Simulate API call
+            // Construct mailto URL
+            const subject = encodeURIComponent('School App Inquiry from ' + name);
+            const body = encodeURIComponent(`Hello,\n\nYou have received a new message from your website contact form:\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}\n\nBest regards,\n${name}`);
+            
+            // Trigger the email client
+            const mailtoUrl = `mailto:jeanjeyasingh@gmail.com?subject=${subject}&body=${body}`;
+            
+            // Small delay to show "Opening Email..." status
             setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-check"></i> Sent Successfully!';
+                window.location.href = mailtoUrl;
+                
+                btn.innerHTML = '<i class="fas fa-check"></i> Email Drafted!';
                 btn.style.background = '#28a745';
                 contactForm.reset();
 
@@ -89,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.disabled = false;
                     btn.style.background = '';
                 }, 3000);
-            }, 1500);
+            }, 800);
         });
     }
 
